@@ -113,6 +113,53 @@ const af_simple_descriptor_t tuyaSwitch_simpleDesc =
 };
 
 
+/**
+ *  @brief Definition for Incoming cluster / Sever Cluster
+ */
+const u16 tuyaSwitch_EP2_inClusterList[] =
+{
+	ZCL_CLUSTER_GEN_BASIC,
+	ZCL_CLUSTER_GEN_IDENTIFY,
+	ZCL_CLUSTER_GEN_POWER_CFG,
+#ifdef ZCL_POLL_CTRL
+	ZCL_CLUSTER_GEN_POLL_CONTROL,
+#endif
+};
+
+/**
+ *  @brief Definition for Outgoing cluster / Client Cluster
+ */
+const u16 tuyaSwitch_EP2_outClusterList[] =
+{
+#ifdef ZCL_ON_OFF
+	ZCL_CLUSTER_GEN_ON_OFF,
+#endif
+};
+
+
+/**
+ *  @brief Definition for Server cluster number and Client cluster number
+ */
+#define TUYASWITCH_EP2_IN_CLUSTER_NUM		(sizeof(tuyaSwitch_EP2_inClusterList)/sizeof(tuyaSwitch_EP2_inClusterList[0]))
+#define TUYASWITCH_EP2_OUT_CLUSTER_NUM	(sizeof(tuyaSwitch_EP2_outClusterList)/sizeof(tuyaSwitch_EP2_outClusterList[0]))
+
+/**
+ *  @brief Definition for simple description for HA profile
+ */
+const af_simple_descriptor_t tuyaSwitch_EP2simpleDesc =
+{
+	HA_PROFILE_ID,                      	/* Application profile identifier */
+	HA_DEV_ONOFF_SWITCH,                	/* Application device identifier */
+	TUYA_SWITCH_ENDPOINT2,                 /* Endpoint */
+	2,                                  	/* Application device version */
+	0,										/* Reserved */
+	TUYASWITCH_EP2_IN_CLUSTER_NUM,           	/* Application input cluster count */
+	TUYASWITCH_EP2_OUT_CLUSTER_NUM,          	/* Application output cluster count */
+	(u16 *)tuyaSwitch_EP2_inClusterList,    	/* Application input cluster list */
+	(u16 *)tuyaSwitch_EP2_outClusterList,   	/* Application output cluster list */
+};
+
+
 /* Basic */
 zcl_basicAttr_t g_zcl_basicAttrs =
 {
@@ -238,6 +285,31 @@ const zcl_specClusterInfo_t g_tuyaSwitchClusterList[] =
 };
 
 u8 TUYA_SWITCH_CB_CLUSTER_NUM = (sizeof(g_tuyaSwitchClusterList)/sizeof(g_tuyaSwitchClusterList[0]));
+
+/**********************************************************************
+ * FUNCTIONS
+ */
+
+/**
+ *  @brief Definition for simple switch ZCL specific cluster
+ */
+const zcl_specClusterInfo_t g_tuyaSwitchEP2ClusterList[] =
+{
+	{ZCL_CLUSTER_GEN_BASIC,			MANUFACTURER_CODE_NONE,	ZCL_BASIC_ATTR_NUM, 	basic_attrTbl,  	zcl_basic_register,		tuyaSwitch_basicCb},
+	{ZCL_CLUSTER_GEN_IDENTIFY,		MANUFACTURER_CODE_NONE,	ZCL_IDENTIFY_ATTR_NUM,	identify_attrTbl,	zcl_identify_register,	tuyaSwitch_identifyCb},
+	{ZCL_CLUSTER_GEN_POWER_CFG,		MANUFACTURER_CODE_NONE,	ZCL_POWER_CFG_ATTR_NUM,	powerCfg_attrTbl,	zcl_powerCfg_register,	tuyaSwitch_powerCfgCb},
+#ifdef ZCL_GROUP
+	{ZCL_CLUSTER_GEN_GROUPS,		MANUFACTURER_CODE_NONE,	0, 						NULL,  				zcl_group_register,		tuyaSwitch_groupCb},
+#endif
+#ifdef ZCL_SCENE
+	{ZCL_CLUSTER_GEN_SCENES,		MANUFACTURER_CODE_NONE,	0,						NULL,				zcl_scene_register,		tuyaSwitch_sceneCb},
+#endif
+#ifdef ZCL_POLL_CTRL
+	{ZCL_CLUSTER_GEN_POLL_CONTROL,	MANUFACTURER_CODE_NONE,	ZCL_POLLCTRL_ATTR_NUM,	pollCtrl_attrTbl, 	zcl_pollCtrl_register, 	tuyaSwitch_pollCtrlCb},
+#endif
+};
+
+u8 TUYA_SWITCH_EP2_CB_CLUSTER_NUM = (sizeof(g_tuyaSwitchEP2ClusterList)/sizeof(g_tuyaSwitchEP2ClusterList[0]));
 
 /**********************************************************************
  * FUNCTIONS

@@ -50,6 +50,7 @@ extern "C" {
 #define IMAGE_TYPE                          ((CHIP_TYPE << 8) | IMAGE_TYPE_SWITCH_ZBWS01A) //0x03B1
 #endif
 
+
 // BUTTONS definition
 // Net Key button
 #define BUTTON1                     GPIO_PB5
@@ -60,14 +61,25 @@ extern "C" {
 #define PM_WAKEUP_LEVEL_BUTTON1     PM_WAKEUP_LEVEL_HIGH
 #define HAVE_NET_BUTTON             1
 
+
 //SW2 button
-#define BUTTON2                     GPIO_PD2
-#define PD2_FUNC                    AS_GPIO
-#define PD2_OUTPUT_ENABLE           0
-#define PD2_INPUT_ENABLE            1
-#define PULL_WAKEUP_SRC_PD2         PM_PIN_PULLUP_10K
+#define BUTTON2                     GPIO_PB4
+#define PB4_FUNC                    AS_GPIO
+#define PB4_OUTPUT_ENABLE           0
+#define PB4_INPUT_ENABLE            1
+#define PULL_WAKEUP_SRC_PB4         PM_PIN_UP_DOWN_FLOAT
 #define PM_WAKEUP_LEVEL_BUTTON2     PM_WAKEUP_LEVEL_LOW
 #define HAVE_1_BUTTON               1
+
+//SW3 button
+#define BUTTON3                     GPIO_PC2
+#define PC2_FUNC                    AS_GPIO
+#define PC2_OUTPUT_ENABLE           0
+#define PC2_INPUT_ENABLE            1
+#define PULL_WAKEUP_SRC_PC2         PM_PIN_PULLUP_10K
+#define PM_WAKEUP_LEVEL_BUTTON3     PM_WAKEUP_LEVEL_LOW
+#define HAVE_1_BUTTON               1
+
 
 // LEDS definition
 #define LED1                        GPIO_PD4
@@ -99,9 +111,10 @@ extern "C" {
 //};
 #define  VK_SW1  0x01
 #define  VK_SW2  0x02
+#define  VK_SW3  0x03
 
 #define KB_MAP_NORMAL   {\
-        {VK_SW2,}, }
+        {VK_SW2,},{VK_SW3,}, }
 /*        {VK_SW1,}, \
         {VK_SW2,}, }*/
 
@@ -109,7 +122,7 @@ extern "C" {
 #define KB_MAP_FN       KB_MAP_NORMAL
 
 #define KB_DRIVE_PINS  {NULL }
-#define KB_SCAN_PINS   { BUTTON2}//{BUTTON1,  BUTTON2}
+#define KB_SCAN_PINS   { BUTTON2, BUTTON3}//{BUTTON1,  BUTTON2}
 
 
 /* Disable C linkage for C++ Compilers: */

@@ -166,7 +166,7 @@ void cmdSendReport()
 				ZCL_CLUSTER_GEN_POWER_CFG, pAttrEntry->id, pAttrEntry->type, pAttrEntry->data);
     }
 }
-void cmdToggle(void)
+void cmdToggle(bool test)
 {
 	// printf("cmdToggle\n");
 	if(zb_isDeviceJoinedNwk())
@@ -183,7 +183,11 @@ void cmdToggle(void)
         /* fix for issue #21 - send report to binded only */
         dstEpInfo.dstAddrMode = APS_DSTADDR_EP_NOTPRESETNT; /* send using data from binded table */
 #endif
-		zcl_onOff_toggleCmd(TUYA_SWITCH_ENDPOINT, &dstEpInfo, FALSE);
+        if(test==true){
+		  zcl_onOff_toggleCmd(TUYA_SWITCH_ENDPOINT2, &dstEpInfo, FALSE);
+        } else {
+          zcl_onOff_toggleCmd(TUYA_SWITCH_ENDPOINT, &dstEpInfo, FALSE);
+        }
 	}
 }
 
@@ -289,6 +293,12 @@ void buttonKeepPressed(u8 btNum) {
     	light_blink_start(255, 200, 200);
     	g_switchAppCtx.state = APP_STATE_HOLD_PROCESSED_SW2;
     	cmdMoveOnOff();
+    }else if(btNum == VK_SW3) {
+        printf("Button keep pressed SW3\n");
+        light_blink_stop();
+        light_blink_start(255, 200, 200);
+        g_switchAppCtx.state = APP_STATE_HOLD_PROCESSED_SW3;
+        cmdMoveOnOff();
     }
 }
 
@@ -300,6 +310,9 @@ void buttonShortPressed(u8 btNum){
     }else if(btNum == VK_SW2){
     	printf("Button short press SW2\n");
     	light_blink_start(1, 3000, 0);
+    }else if(btNum == VK_SW3){
+        printf("Button short press SW3\n");
+        light_blink_start(1, 3000, 0);
     }
 }
 
@@ -319,6 +332,10 @@ void keyScan_keyPressedCB(kb_data_t *kbEvt){
         g_switchAppCtx.keyPressedTime = clock_time();
         g_switchAppCtx.state = APP_STATE_HOLD_SW2;
     }
+    if(keyCode == VK_SW3){
+        g_switchAppCtx.keyPressedTime = clock_time();
+        g_switchAppCtx.state = APP_STATE_HOLD_SW3;
+    }
 }
 
 
@@ -328,13 +345,22 @@ void keyScan_keyReleasedCB(u8 keyCode){
 		light_blink_stop();
 	}
 	if((keyCode == VK_SW2) && (g_switchAppCtx.state == APP_STATE_HOLD_SW2))  {
-		cmdToggle();
+		cmdToggle(false);
 		light_blink_stop();
 	}
 
     if((keyCode == VK_SW2) && (g_switchAppCtx.state == APP_STATE_HOLD_PROCESSED_SW2))  {
-    	cmdStopWithOnOff();
-    	light_blink_stop();
+            cmdStopWithOnOff();
+	        light_blink_stop();
+    }
+    if((keyCode == VK_SW3) && (g_switchAppCtx.state == APP_STATE_HOLD_SW3))  {
+            cmdToggle(true);
+            light_blink_stop();
+    }
+
+    if((keyCode == VK_SW3) && (g_switchAppCtx.state == APP_STATE_HOLD_PROCESSED_SW3))  {
+            cmdStopWithOnOff();
+            light_blink_stop();
     }
 
     g_switchAppCtx.state = APP_STATE_NORMAL;
@@ -350,6 +376,11 @@ void app_key_handler(void){
     if(g_switchAppCtx.state == APP_STATE_HOLD_SW2){
         if(clock_time_exceed(g_switchAppCtx.keyPressedTime, 3*1000*1000)){
             buttonKeepPressed(VK_SW2);
+        }
+    }
+    if(g_switchAppCtx.state == APP_STATE_HOLD_SW3){
+        if(clock_time_exceed(g_switchAppCtx.keyPressedTime, 3*1000*1000)){
+            buttonKeepPressed(VK_SW3);
         }
     }
     if(kb_scan_key(0, 1)){//if 1 keyboard update detected

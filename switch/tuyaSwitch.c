@@ -129,9 +129,13 @@ drv_pm_pinCfg_t g_switchPmCfg[] = {
 		PM_WAKEUP_LEVEL_BUTTON1
 	},
 	{
-		BUTTON2,
-		PM_WAKEUP_LEVEL_BUTTON2
-	}
+		BUTTON3,
+		PM_WAKEUP_LEVEL_BUTTON3
+	},
+    {
+        BUTTON2,
+        PM_WAKEUP_LEVEL_BUTTON2
+    }
 };
 #endif
 /**********************************************************************
@@ -185,11 +189,15 @@ void user_app_init(void)
 
 	/* register endPoint */
 	af_endpointRegister(TUYA_SWITCH_ENDPOINT, (af_simple_descriptor_t *)&tuyaSwitch_simpleDesc, zcl_rx_handler, NULL);
+	/* register endPoint */
+	af_endpointRegister(TUYA_SWITCH_ENDPOINT2, (af_simple_descriptor_t *)&tuyaSwitch_EP2simpleDesc, zcl_rx_handler, NULL);
 
 	zcl_reportingTabInit();
 
 	/* Register ZCL specific cluster information */
 	zcl_register(TUYA_SWITCH_ENDPOINT, TUYA_SWITCH_CB_CLUSTER_NUM, (zcl_specClusterInfo_t *)g_tuyaSwitchClusterList);
+	/* Register ZCL specific cluster information */
+	zcl_register(TUYA_SWITCH_ENDPOINT2, TUYA_SWITCH_EP2_CB_CLUSTER_NUM, (zcl_specClusterInfo_t *)g_tuyaSwitchEP2ClusterList);
 
 #if ZCL_OTA_SUPPORT
     ota_init(OTA_TYPE_CLIENT, (af_simple_descriptor_t *)&tuyaSwitch_simpleDesc, &tuyaSwitch_otaInfo, &tuyaSwitch_otaCb);

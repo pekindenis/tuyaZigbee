@@ -31,6 +31,7 @@
  * CONSTANT
  */
 #define TUYA_SWITCH_ENDPOINT  0x01
+#define TUYA_SWITCH_ENDPOINT2  0x02
 
 /**********************************************************************
  * TYPEDEFS
@@ -126,6 +127,10 @@ extern bdb_commissionSetting_t g_bdbCommissionSetting;
 extern u8 TUYA_SWITCH_CB_CLUSTER_NUM;
 extern const zcl_specClusterInfo_t g_tuyaSwitchClusterList[];
 extern const af_simple_descriptor_t tuyaSwitch_simpleDesc;
+
+extern u8 TUYA_SWITCH_EP2_CB_CLUSTER_NUM;
+extern const zcl_specClusterInfo_t g_tuyaSwitchEP2ClusterList[];
+extern const af_simple_descriptor_t tuyaSwitch_EP2simpleDesc;
 
 /* Attributes */
 extern zcl_basicAttr_t g_zcl_basicAttrs;
